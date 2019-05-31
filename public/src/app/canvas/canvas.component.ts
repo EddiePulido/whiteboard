@@ -1,15 +1,17 @@
 import {
-    Component, Input, ElementRef, AfterViewInit, ViewChild
+    Component, Input, ElementRef, AfterViewInit, ViewChild, OnInit
   } from '@angular/core';
   import { fromEvent } from 'rxjs';
   import { switchMap, takeUntil, pairwise } from 'rxjs/operators'
+  import * as io from "socket.io-client";
+// import { Socket } from 'dgram';
   
   @Component({
     selector: 'app-canvas',
     template: '<canvas #canvas></canvas>',
     styles: ['canvas { border: 1px solid #000; }']
   })
-  export class CanvasComponent implements AfterViewInit {
+  export class CanvasComponent implements AfterViewInit,OnInit {
   
     @ViewChild('canvas', {static: true}) public canvas: ElementRef;
   
@@ -18,6 +20,8 @@ import {
     
     @Input() public color = "#000";
     @Input() public lineSize = 25;
+
+    socket = io('http://localhost:8000');
   
     private cx: CanvasRenderingContext2D;
 
@@ -34,6 +38,16 @@ import {
       this.cx.strokeStyle = this.color;
   
       this.captureEvents(canvasEl);
+
+
+    }
+
+    ngOnInit(){
+        this.socket.on("draw-this",function(data){
+            this.drawOnCanvas(data.prevPos,data.currentPos);
+        }.bind(this))
+
+        
     }
     
     private captureEvents(canvasEl: HTMLCanvasElement) {
@@ -71,8 +85,12 @@ import {
     
           // this method we'll implement soon to do the actual drawing
           this.drawOnCanvas(prevPos, currentPos);
+          this.socket.emit("draw-coordinates",{prevPos: prevPos, currentPos: currentPos});
+
         });
     }
+
+
   
     private drawOnCanvas(prevPos: { x: number, y: number }, currentPos: { x: number, y: number }) {
       if (!this.cx) { return; }

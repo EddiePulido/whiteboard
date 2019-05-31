@@ -30,7 +30,9 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     } 
   
     this.socket.on('update-messages', function (data) {
-      if(data.message.room === JSON.parse(localStorage.getItem("user")).room) {
+        console.log("ANGULAR UPDATING MESSAGES", data);
+      if(true) {
+            console.log("in update messages");
         this.chats = data;
 
         console.log("\n---------------------------------------------\n"+user.nickname + " sent message: "+ this.msgData.message + " to ROOM: " + user.room +"\n---------------------------------------------\n");
@@ -67,22 +69,22 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     // this.getChatByRoom(this.newUser.room);
     this.msgData = { room: this.newUser.room, nickname: this.newUser.nickname, message: '' };
     this.joinned = true;
-    this.socket.emit('send-message', { room: this.newUser.room, nickname: this.newUser.nickname, message: 'Join this room', updated_at: date });
-
+    // this.socket.emit('send-message', { room: this.newUser.room, nickname: this.newUser.nickname, message: 'Join this room', updated_at: date });
+    this.socket.emit('grab-messages',this.msgData);
     console.log("\n---------------------------------------------\n"+this.newUser.nickname + " JOINED ROOM: " + this.newUser.room +"\n---------------------------------------------\n");
 
 
 
     var user = JSON.parse(localStorage.getItem("user"));
 
-    this.socket.on('update-messages', function (data) {
-      if(data.message.room === JSON.parse(localStorage.getItem("user")).room) {
-        this.chats = data;
-        this.msgData = { room: user.room, nickname: user.nickname, message: '' }
-        // this.getChatByRoom(user.room);
-        this.scrollToBottom();
-      }
-    }.bind(this));
+    // this.socket.on('update-messages', function (data) {
+    //   if(data.room === JSON.parse(localStorage.getItem("user")).room) {
+    //     this.chats = data;
+    //     this.msgData = { room: user.room, nickname: user.nickname, message: '' }
+    //     // this.getChatByRoom(user.room);
+    //     this.scrollToBottom();
+    //   }
+    // }.bind(this));
   }
 
   sendMessage() {
@@ -105,7 +107,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     
     
     this.socket.on('update-messages', function (data) {
-      if(data.message.room === JSON.parse(localStorage.getItem("user")).room) {
+      if(data.room === JSON.parse(localStorage.getItem("user")).room) {
         this.chats = data;
 
         console.log("\n---------------------------------------------\n"+user.nickname + " sent message: "+ this.msgData.message + " to ROOM: " + user.room +"\n---------------------------------------------\n");
@@ -121,7 +123,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   logout() {
     var date = new Date();
     var user = JSON.parse(localStorage.getItem("user"));
-    this.socket.emit('send-message', { room: user.room, nickname: user.nickname, message: 'Left this room', updated_at: date });
+    // this.socket.emit('send-message', { room: user.room, nickname: user.nickname, message: 'Left this room', updated_at: date });
     localStorage.removeItem("user");
     this.joinned = false;
     console.log("a user left the room")
