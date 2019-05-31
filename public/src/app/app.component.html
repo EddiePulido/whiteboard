@@ -1,4 +1,40 @@
-<h1>Test</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-<app-canvas></app-canvas>
+    <title>Document</title>
+    
+
+
+</head>
+<body>
+    <h1>Test</h1>
+
+    <div class='nav'>
+        <input type='text' (colorPickerChange)="update(color)" (colorPickerSelect)="update(color)" [cpFallbackColor]="000000" [cpOKButton]="true" [cpOKButtonClass]= "'btn btn-primary btn-xs'"
+        [(colorPicker)]="color" [style.background]="color" value="Pick a Color" />
+        <button (click)="microify()" class="btn btn-secondary">Tiny</button>
+        <button (click)="smallify()" class="btn btn-secondary">Small</button>
+        <button (click)="medify()" class="btn btn-secondary">Medium</button>
+        <button (click)="bigify()" class="btn btn-secondary">Large</button>
+        <!-- <button (click)="eraser(color)" type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">Eraser</button> -->
+        <div class="btn-group btn-group-toggle selector" data-toggle="buttons" >
+            <label class="btn btn-primary active" (click)="draw(color)">
+                <input type="radio" name="options" autocomplete="off" checked > Draw
+            </label>
+            <label class="btn btn-primary" (click)="eraser()">
+                <input type="radio" name="options" autocomplete="off"> Erase
+            </label>
+        </div>
+        <button (click)="clear()" class="btn btn-danger">Clear</button>
+    </div>
+
+<app-canvas [(markerColor)] = "selectedColor" [size]="selectedSize"></app-canvas>
 <router-outlet></router-outlet>
+</body>
+</html>
+

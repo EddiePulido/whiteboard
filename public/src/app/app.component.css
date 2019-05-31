@@ -1,0 +1,25 @@
+
+.nav {
+    width: 1000px;
+    padding-left: 5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 10px;
+    border-radius: 25px;
+    background-color: #FFC2BB;
+}
+
+.nav input {
+    margin-right: 1rem;
+    text-align: center;
+    
+}
+.nav button {
+    margin-right: 1rem;
+    margin-left: 1rem;
+}
+
+.nav .selector {
+    margin-right: 1rem;
+    margin-left: 1rem;
+}
