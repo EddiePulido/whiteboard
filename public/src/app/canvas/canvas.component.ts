@@ -1,27 +1,26 @@
 import {
-    Component, Input, ElementRef, AfterViewInit, ViewChild
+    Component, Input, ElementRef, AfterViewInit, ViewChild, OnInit
   } from '@angular/core';
   import { fromEvent } from 'rxjs';
   import { switchMap, takeUntil, pairwise } from 'rxjs/operators'
+import { CONTEXT_NAME } from '@angular/compiler/src/render3/view/util';
   
   @Component({
     selector: 'app-canvas',
     template: '<canvas #canvas></canvas>',
     styles: ['canvas { border: 1px solid #000; }']
   })
-  export class CanvasComponent implements AfterViewInit {
+  export class CanvasComponent implements AfterViewInit{
   
-    @ViewChild('canvas') public canvas: ElementRef;
+    @ViewChild('canvas', {static:true}) public canvas: ElementRef;
   
     @Input() public width = 1000;
     @Input() public height = 800;
-    
-    @Input() public color = "#000";
-    @Input() public lineSize = 25;
+    @Input() markerColor: string;
+    @Input() size : number;
   
     private cx: CanvasRenderingContext2D;
 
-  
     public ngAfterViewInit() {
       const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
       this.cx = canvasEl.getContext('2d');
@@ -29,9 +28,9 @@ import {
       canvasEl.width = this.width;
       canvasEl.height = this.height;
   
-      this.cx.lineWidth = this.lineSize;
+      this.cx.lineWidth = this.size;
       this.cx.lineCap = 'round';
-      this.cx.strokeStyle = this.color;
+      this.cx.strokeStyle = "#00000"
   
       this.captureEvents(canvasEl);
     }
@@ -75,6 +74,9 @@ import {
     }
   
     private drawOnCanvas(prevPos: { x: number, y: number }, currentPos: { x: number, y: number }) {
+      this.cx.strokeStyle = this.markerColor;
+      this.cx.lineWidth = this.size;
+
       if (!this.cx) { return; }
   
       this.cx.beginPath();
@@ -85,6 +87,13 @@ import {
         this.cx.stroke();
       }
     }
+
+    public redraw() {
+      console.log("Redrawing");
+      this.cx.clearRect(0,0, this.width, this.height);
+    }
+
+
   
   }
   
